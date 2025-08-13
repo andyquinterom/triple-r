@@ -138,11 +138,28 @@ pub mod vec;
 pub use hashmap::{ReusableHashMap, ReusableHashMapGuard};
 pub use vec::{ReusableVec, ReusableVecGuard};
 
+/// A trait that indicates that a type can be safely cast into another type for the
+/// purpose of reusing a collection's allocation.
+///
+/// # Safety
+///
+/// This trait is unsafe to implement because it allows for type transmutation
+/// through pointer casting. Implementers must guarantee that it is safe to
+/// transmute a container of `Self` (e.g., `Vec<Self>`) into a container of `T`
+/// (e.g., `Vec<T>`).
+///
+/// For this library, this is primarily used to change the lifetimes of references
+/// (e.g., from `&'static str` to `&'a str`), which is safe because the
+/// collection is cleared before it is used with the new type, and the new
+/// lifetimes are constrained by the guard's lifetime.
+///
+/// For types with the same memory layout (e.g., primitive integers), this is
+/// also safe.
 pub unsafe trait ReuseCastInto<T> {}
 
 // This implementation allows reusing a map of references with a shorter lifetime.
 // For example, a `HashMap<&'static str, _>` can be reused as a `HashMap<&'a str, _>`.
-unsafe impl<'l1, 'l2, T: ?Sized> ReuseCastInto<&'l2 T> for &'l1 T {}
+unsafe impl<T: ?Sized> ReuseCastInto<&T> for &T {}
 
 macro_rules! impl_reuse_cast_into_for_primitive {
     ($($t:ty),*) => {
