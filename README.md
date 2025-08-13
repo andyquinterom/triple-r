@@ -41,11 +41,11 @@ for item in data_stream {
 
 ## Key Features
 
-- **Allocation Reuse:** Provides `ReusableHashMap` and `ReusableVec` to avoid repeated memory allocations.
+- **Allocation Reuse:** Provides `ReusableHashMap`, `ReusableVec`, and `ReusableString` to avoid repeated memory allocations.
 - **Type Casting:** Safely cast the types of the stored elements between uses. For example, a `ReusableHashMap<&'static str, _>` can be recycled into a guard for a `HashMap<&'a str, _>`.
 - **Compile-Time Safety:** The API is designed to prevent common misuses at compile time, such as having multiple mutable references to the same underlying collection.
 - **Safety Assured:** The internal use of `unsafe` code is minimal and has been carefully designed and verified with `cargo miri` to ensure it is free of undefined behavior.
-- **Drop-In Replacement:** The guard objects implement `Deref` and `DerefMut`, so you can use them just like standard `HashMap` and `Vec`.
+- **Drop-In Replacement:** The guard objects implement `Deref` and `DerefMut`, so you can use them just like standard `HashMap`, `Vec`, and `String`.
 
 ## Installation
 
@@ -106,6 +106,31 @@ for i in 0..5 {
 }
 ```
 
+### ReusableString
+
+```rust
+use triple_r::ReusableString;
+
+let mut reusable_string = ReusableString::default();
+let mut last_capacity = 0;
+
+// Use the string multiple times, preserving its capacity.
+for _ in 0..3 {
+    let mut string_guard = reusable_string.recycle();
+    assert!(string_guard.is_empty());
+    assert_eq!(string_guard.capacity(), last_capacity);
+
+    string_guard.push_str("some new content");
+    last_capacity = string_guard.capacity();
+}
+
+// The final capacity is retained for the next use.
+let final_guard = reusable_string.recycle();
+assert!(final_guard.is_empty());
+assert!(final_guard.capacity() > 0);
+assert_eq!(final_guard.capacity(), last_capacity);
+```
+
 ### Reusing with Different Lifetimes
 
 A powerful feature is the ability to change the lifetime of references within the collection. This is useful when you have a long-lived `ReusableHashMap` but need to use it with short-lived data.
@@ -133,7 +158,7 @@ assert!(map_guard.is_empty());
 
 This library uses `unsafe` code to perform the type transmutation and to work with raw pointers inside the guard. The safety of this implementation is ensured by the following principles:
 
-1.  **Exclusive Access:** The `recycle()` method requires a mutable reference (`&mut self`) to the `ReusableHashMap` or `ReusableVec`. This statically guarantees that only one guard can be active at a time, preventing data races.
+1.  **Exclusive Access:** The `recycle()` method requires a mutable reference (`&mut self`) to the `ReusableHashMap`, `ReusableVec`, or `ReusableString`. This statically guarantees that only one guard can be active at a time, preventing data races.
 2.  **Lifetime Management:** The returned guard is tied to the lifetime of the `&mut self` borrow, ensuring it cannot outlive the container it references.
 3.  **Miri Verification:** The entire codebase is tested with `cargo miri`, a tool that detects undefined behavior in `unsafe` Rust code. All tests pass under Miri, giving strong confidence in the library's soundness.
 
