@@ -11,12 +11,12 @@ warning: variable does not need to be mutable
 error[E0597]: `vec` does not live long enough
   --> tests/ui-vec/02-guard-outlives-vec.rs:7:17
    |
- 6 |         let mut vec = ReusableVec::<String>::default();
+6  |         let mut vec = ReusableVec::<String>::default();
    |             ------- binding `vec` declared here
- 7 |         guard = vec.recycle::<String>();
+7  |         guard = vec.recycle::<String>();
    |                 ^^^ borrowed value does not live long enough
- 8 |         // `vec` is dropped at the end of this scope.
- 9 |     }
+8  |         // `vec` is dropped at the end of this scope.
+9  |     }
    |     - `vec` dropped here while still borrowed
 ...
 14 |     let _ = guard.len();
