@@ -1,0 +1,32 @@
+error[E0277]: `*mut HashMap<String, String>` cannot be sent between threads safely
+  --> tests/ui/03-guard-is-not-send.rs:9:32
+   |
+ 9 |       let handle = thread::spawn(move || {
+   |                    ------------- ^------
+   |                    |             |
+   |  __________________|_____________within this `{closure@$DIR/tests/ui/03-guard-is-not-send.rs:9:32: 9:39}`
+   | |                  |
+   | |                  required by a bound introduced by this call
+...  |
+14 | |     });
+   | |_____^ `*mut HashMap<String, String>` cannot be sent between threads safely
+   |
+   = help: within `{closure@$DIR/tests/ui/03-guard-is-not-send.rs:9:32: 9:39}`, the trait `Send` is not implemented for `*mut HashMap<String, String>`
+note: required because it appears within the type `ReusableHashMapGuard<'_, String, String, String, String, RandomState>`
+  --> src/hashmap.rs
+   |
+   | pub struct ReusableHashMapGuard<'parent, K1, V1, K2, V2, S>
+   |            ^^^^^^^^^^^^^^^^^^^^
+note: required because it's used within this closure
+  --> tests/ui/03-guard-is-not-send.rs:9:32
+   |
+ 9 |     let handle = thread::spawn(move || {
+   |                                ^^^^^^^
+note: required by a bound in `spawn`
+  --> $RUST/std/src/thread/mod.rs
+   |
+   | pub fn spawn<F, T>(f: F) -> JoinHandle<T>
+   |        ----- required by a bound in this function
+...
+   |     F: Send + 'static,
+   |        ^^^^ required by this bound in `spawn`

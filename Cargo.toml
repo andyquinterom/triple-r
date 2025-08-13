@@ -1,0 +1,15 @@
+[package]
+name = "triple-r"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.65"
+description = "Macros to for the recuerdame crate."
+repository = "https://github.com/andyquinterom/recuerdame"
+license = "MIT"
+readme = "./README.md"
+
+[dependencies]
+
+[dev-dependencies]
+trybuild = "1.0"
+twox-hash = "1.6.3"

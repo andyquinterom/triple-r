@@ -1,0 +1,10 @@
+error[E0308]: mismatched types
+  --> tests/ui/04-wrong-build-hasher.rs:20:9
+   |
+19 |     let _: ReusableHashMapGuard<'_, String, String, String, String, RandomState> =
+   |            --------------------------------------------------------------------- expected due to this
+20 |         map.recycle::<String, String>();
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `RandomState`, found `BuildHasherDefault<XxHash64>`
+   |
+   = note: expected struct `ReusableHashMapGuard<'_, String, String, String, String, RandomState>`
+              found struct `ReusableHashMapGuard<'_, String, String, String, String, BuildHasherDefault<XxHash64>>`

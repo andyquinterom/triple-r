@@ -1,0 +1,23 @@
+warning: variable does not need to be mutable
+ --> tests/ui/02-guard-outlives-map.rs:4:9
+  |
+4 |     let mut guard;
+  |         ----^^^^^
+  |         |
+  |         help: remove this `mut`
+  |
+  = note: `#[warn(unused_mut)]` on by default
+
+error[E0597]: `map` does not live long enough
+  --> tests/ui/02-guard-outlives-map.rs:7:17
+   |
+ 6 |         let mut map = ReusableHashMap::<String, String>::default();
+   |             ------- binding `map` declared here
+ 7 |         guard = map.recycle::<String, String>();
+   |                 ^^^ borrowed value does not live long enough
+ 8 |         // `map` is dropped at the end of this scope.
+ 9 |     }
+   |     - `map` dropped here while still borrowed
+...
+14 |     let _ = guard.keys();
+   |             ----- borrow later used here
