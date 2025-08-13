@@ -1,8 +1,8 @@
 use crate::ReuseCastInto;
 use std::{
     cell::UnsafeCell,
-    collections::HashMap,
-    hash::{BuildHasher, RandomState},
+    collections::{hash_map::RandomState, HashMap},
+    hash::BuildHasher,
     marker::PhantomData,
     ops::{Deref, DerefMut},
 };
