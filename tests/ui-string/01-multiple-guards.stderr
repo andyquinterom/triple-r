@@ -1,0 +1,10 @@
+error[E0499]: cannot borrow `s` as mutable more than once at a time
+ --> tests/ui-string/01-multiple-guards.rs:8:19
+  |
+6 |     let _guard1 = s.recycle();
+  |                   - first mutable borrow occurs here
+7 |     // This second mutable borrow should fail because `s` is already borrowed.
+8 |     let _guard2 = s.recycle();
+  |                   ^ second mutable borrow occurs here
+9 | }
+  | - first borrow might be used here, when `_guard1` is dropped and runs the `Drop` code for type `ReusableStringGuard`

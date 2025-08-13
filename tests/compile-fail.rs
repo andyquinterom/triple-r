@@ -11,3 +11,10 @@ fn ui_vec() {
     let t = trybuild::TestCases::new();
     t.compile_fail("tests/ui-vec/*.rs");
 }
+
+#[test]
+#[cfg(not(miri))]
+fn ui_string() {
+    let t = trybuild::TestCases::new();
+    t.compile_fail("tests/ui-string/*.rs");
+}

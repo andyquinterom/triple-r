@@ -1,0 +1,24 @@
+warning: variable does not need to be mutable
+ --> tests/ui-string/02-guard-outlives-string.rs:4:9
+  |
+4 |     let mut guard;
+  |         ----^^^^^
+  |         |
+  |         help: remove this `mut`
+  |
+  = note: `#[warn(unused_mut)]` on by default
+
+error[E0597]: `s` does not live long enough
+  --> tests/ui-string/02-guard-outlives-string.rs:8:17
+   |
+6  |         let mut s = ReusableString::default();
+   |             ----- binding `s` declared here
+7  |         // The guard borrows `s`, which has a shorter lifetime than `guard`.
+8  |         guard = s.recycle();
+   |                 ^ borrowed value does not live long enough
+9  |         // `s` is dropped at the end of this scope.
+10 |     }
+   |     - `s` dropped here while still borrowed
+...
+14 |     println!("Length: {}", guard.len());
+   |                            ----- borrow later used here

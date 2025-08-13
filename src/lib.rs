@@ -134,8 +134,10 @@
 //! 2.  **Lifetime Management:** The returned guard is tied to the lifetime of the `&mut self` borrow, ensuring it cannot outlive the container it references.
 //! 3.  **Miri Verification:** The entire codebase is tested with `cargo miri`, a tool that detects undefined behavior in `unsafe` Rust code. All tests pass under Miri, giving strong confidence in the library's soundness.
 pub mod hashmap;
+pub mod string;
 pub mod vec;
 pub use hashmap::{ReusableHashMap, ReusableHashMapGuard};
+pub use string::{ReusableString, ReusableStringGuard};
 pub use vec::{ReusableVec, ReusableVecGuard};
 
 /// A trait that indicates that a type can be safely cast into another type for the
