@@ -2,7 +2,7 @@
 
 [![Crates.io](https://img.shields.io/crates/v/triple-r.svg)](https://crates.io/crates/triple-r)
 [![Docs.rs](https://docs.rs/triple-r/badge.svg)](https://docs.rs/triple-r)
-[![CI](https://github.com/username/repo/actions/workflows/rust.yml/badge.svg)](https://github.com/username/repo/actions)
+[![CI](https://github.com/andyquinterom/triple-r/actions/workflows/ci.yml/badge.svg)](https://github.com/andyquinterom/triple-r/actions/workflows/ci.yml)
 
 `triple-r` is a high-performance Rust library that provides wrappers around standard library collections to enable the reuse of their memory allocations. By recycling the underlying memory of collections like `HashMap` and `Vec`, `triple-r` helps reduce allocation overhead in performance-critical applications.
 
